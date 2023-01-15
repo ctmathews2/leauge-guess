@@ -1,1 +1,2 @@
-.\Backend\config\default.json
+#ignore config folder
+config
