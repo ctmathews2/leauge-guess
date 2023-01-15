@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://dev:1234@cluster0.n0l3pzx.mongodb.net/?retryWrites=true&w=majority"
+    "mongoURI": "mongodb+srv://dev:1234@cluster0.n0l3pzx.mongodb.net/?retryWrites=true&w=majority",
+    "apikey": "RGAPI-375f92dd-d1dc-4e4d-881d-9297ca96d851"
 }

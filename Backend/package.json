@@ -15,7 +15,9 @@
     "config": "^3.3.8",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "mongoose": "^6.8.3"
+    "irelia": "^0.2.5",
+    "mongoose": "^6.8.3",
+    "riot-lol-api": "^4.3.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
