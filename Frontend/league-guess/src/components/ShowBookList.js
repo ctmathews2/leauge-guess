@@ -39,6 +39,12 @@ function ShowBookList() {
             >
               + Add New Book
             </Link>
+            <Link
+              to='/matches'
+              className='btn btn-outline-warning float-right'
+            >
+              + See Matches
+            </Link>
             <br />
             <br />
             <hr />
