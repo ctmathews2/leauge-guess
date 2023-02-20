@@ -53,6 +53,40 @@ const getStats = function(req, res) {
     });
 }
 
+const getTenMatchIds = function(req, res, next) {
+    // Get match Ids
+    console.log('im here')
+    riotRequest.request('americas', 'match', '/lol/match/v5/matches/by-puuid/'+req.puuid+'/ids', function(err, data) {
+        console.log('second');
+        req.matchIds = data; //How much is data?
+        next();
+    });
+}
+
+const getTenStats = function(req, res, next) {
+    console.log(req.matchIds);
+    console.log(req.puuid);
+    req.matchesData = [];
+    for(let i = 0; i < req.matchIds.length; i++) {
+        riotRequest.request('americas', 'match', '/lol/match/v5/matches/'+req.matchIds[i], function(err, data) {
+            console.log('third');
+            req.matchesData.push(data);
+            if(i == req.matchIds.length - 1) {
+                next();
+            }
+        })
+    }
+}
+
+const sendData = function(req, res) {
+    res.send(req.matchesData);
+}
+
+// create funtion to get 10 matches and stats
+// send data back to console log data for now
+// after try to send it to DB - if not already present? look at book.js api
+
 matchRouter.get('/', [getPuuid, getMatchIds, getStats ]);
+matchRouter.get('/seed', [getPuuid, getTenMatchIds, getTenStats, sendData]);
 
 module.exports = matchRouter;

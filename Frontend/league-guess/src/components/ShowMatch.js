@@ -26,14 +26,27 @@ function ShowMatch() {
       setMatch(res.data.id);
     })
     .catch((err) => {
-      console.log('Error from ShowMatch');
+      console.log('Error from getMatchData', err);
     });
+  }
+
+  // function to call seed api
+  function seedMatchData() {
+    axios
+    .get('http://localhost:8082/api/matches/seed')
+    .then((res) => {
+      console.log('Seed Data:', res);
+    })
+    .catch((err) => {
+      console.log('Error from seedMatchData', err);
+    })
   }
 
   return (
     <div className='ShowBookList'>
       <div className='container'>
         <button onClick={getMatchData}>Get Match Data</button>
+        <button onClick={seedMatchData}>Seed Data</button>
         {match}
       </div>
     </div>
