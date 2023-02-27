@@ -3,6 +3,8 @@
 const express = require('express');
 const matchRouter = express.Router();
 
+const Match = require('../../models/Match');
+
 var RiotRequest = require('riot-lol-api');
 const config = require('config');
 const key = config.get('apikey');
@@ -79,12 +81,70 @@ const getTenStats = function(req, res, next) {
 }
 
 const sendData = function(req, res) {
-    res.send(req.matchesData);
-}
+    // TODO: Send data to DB
+    // data code: https://darkintaqt.com/blog/league-item-id-list/#h_0
+    // Follow books.js post, after match model is made
+    let dataList = []
+    for(let i = 0; i < req.matchesData.length; i++) {
+        // get the data and log it if all looks good then post to db
+        // the point of this is to get 20+ matches of data and seed the db
+        // when playing the game, to get the first and next match we will trigger the db NOT the api
+        // the api is only for me to seed the db and game on my time
+        let match = req.matchesData[i];
+        let playersList = [];
 
-// create funtion to get 10 matches and stats
-// send data back to console log data for now
-// after try to send it to DB - if not already present? look at book.js api
+        for(let n = 0; n < match.info.participants.length; n++) {
+            let playerData = match.info.participants[n];
+            let player = {
+                team_id: playerData.teamId,
+                gold: playerData.goldEarned,
+                level: playerData.champLevel,
+                items: [
+                    playerData.item0,
+                    playerData.item1,
+                    playerData.item2,
+                    playerData.item3,
+                    playerData.item4,
+                    playerData.item5,
+                    playerData.item6
+                ],
+                damage: playerData.totalDamageDealtToChampions,
+                kills: playerData.kills,
+                deaths: playerData.deaths,
+                assists: playerData.assists,
+                position: playerData.teamPosition
+            }
+            playersList.push(player);
+        }
+
+        let teamsList = [];
+        for(let t = 0; t < match.info.teams.length; t++) {
+            let team = {
+                objectives: {
+                    baron: match.info.teams[t].objectives.baron.kills,
+                    champion: match.info.teams[t].objectives.champion.kills,
+                    dragon: match.info.teams[t].objectives.dragon.kills,
+                    inhibitor: match.info.teams[t].objectives.inhibitor.kills,
+                    riftHerald: match.info.teams[t].objectives.riftHerald.kills,
+                    tower: match.info.teams[t].objectives.tower.kills,
+                },
+                teamId: match.info.teams[t].teamId,
+                win: match.info.teams[t].win
+            }
+            teamsList.push(team);
+        }
+
+        data = {
+            match_id: match.metadata.matchId,
+            game_mode: match.info.gameMode,
+            queue_id: match.info.queueId,
+            players: playersList,
+            teams: teamsList
+        }
+        dataList.push(data);
+    }
+    res.send(dataList);
+}
 
 matchRouter.get('/', [getPuuid, getMatchIds, getStats ]);
 matchRouter.get('/seed', [getPuuid, getTenMatchIds, getTenStats, sendData]);
