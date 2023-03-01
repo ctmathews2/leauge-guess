@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const MatchSchema = new mongoose.Schema({
-  match_id: Number,
+  match_id: String,
   game_mode: String,
   queue_id: Number,
   players: [
@@ -9,7 +9,7 @@ const MatchSchema = new mongoose.Schema({
         team_id: Number,
         gold: Number,
         level: Number,
-        items: [{item: Number}],
+        items: [Number],
         damage: Number,
         kills: Number,
         deaths: Number,

@@ -29,49 +29,37 @@ matchRouter.get('/test', (req, res) => res.send('match route testing!'));
 const getPuuid = function(req, res, next) {
     // Get ID
     riotRequest.request('na1', 'summoner', '/lol/summoner/v4/summoners/by-name/ysoseriious', function(err, data) {
-        console.log('first');
         req.puuid = data.puuid;
-        console.log(next);
         next(); //data.puuid
     });
 }
 
 const getMatchIds = function(req, res, next) {
     // Get match Ids
-    console.log('im here')
     riotRequest.request('americas', 'match', '/lol/match/v5/matches/by-puuid/'+req.puuid+'/ids', function(err, data) {
-        console.log('second');
         req.matchId = data[0];
         next(); //data[0]
     });
 }
 
 const getStats = function(req, res) {
-    console.log(req.matchId);
-    console.log(req.puuid)
     riotRequest.request('americas', 'match', '/lol/match/v5/matches/'+req.matchId, function(err, data) {
-        console.log('third');
         res.send(data);
     });
 }
 
 const getTenMatchIds = function(req, res, next) {
     // Get match Ids
-    console.log('im here')
     riotRequest.request('americas', 'match', '/lol/match/v5/matches/by-puuid/'+req.puuid+'/ids', function(err, data) {
-        console.log('second');
         req.matchIds = data; //How much is data?
         next();
     });
 }
 
 const getTenStats = function(req, res, next) {
-    console.log(req.matchIds);
-    console.log(req.puuid);
     req.matchesData = [];
     for(let i = 0; i < req.matchIds.length; i++) {
         riotRequest.request('americas', 'match', '/lol/match/v5/matches/'+req.matchIds[i], function(err, data) {
-            console.log('third');
             req.matchesData.push(data);
             if(i == req.matchIds.length - 1) {
                 next();
@@ -81,15 +69,8 @@ const getTenStats = function(req, res, next) {
 }
 
 const sendData = function(req, res) {
-    // TODO: Send data to DB
-    // data code: https://darkintaqt.com/blog/league-item-id-list/#h_0
-    // Follow books.js post, after match model is made
     let dataList = []
     for(let i = 0; i < req.matchesData.length; i++) {
-        // get the data and log it if all looks good then post to db
-        // the point of this is to get 20+ matches of data and seed the db
-        // when playing the game, to get the first and next match we will trigger the db NOT the api
-        // the api is only for me to seed the db and game on my time
         let match = req.matchesData[i];
         let playersList = [];
 
@@ -142,6 +123,9 @@ const sendData = function(req, res) {
             teams: teamsList
         }
         dataList.push(data);
+        Match.create(data)
+            .then(match => console.log('pushed match to db'))
+            .catch(err => console.log('error occured', err));
     }
     res.send(dataList);
 }
