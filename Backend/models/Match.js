@@ -6,6 +6,7 @@ const MatchSchema = new mongoose.Schema({
   queue_id: Number,
   players: [
     {
+        champion: String,
         team_id: Number,
         gold: Number,
         level: Number,

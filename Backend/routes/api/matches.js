@@ -77,6 +77,7 @@ const sendData = function(req, res) {
         for(let n = 0; n < match.info.participants.length; n++) {
             let playerData = match.info.participants[n];
             let player = {
+                champion: playerData.championName,
                 team_id: playerData.teamId,
                 gold: playerData.goldEarned,
                 level: playerData.champLevel,

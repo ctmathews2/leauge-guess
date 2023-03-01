@@ -95,3 +95,80 @@
   font-size: 1em;
   padding: 10px 0 10px 0;
 }
+
+/* Show Match Styles */
+body, html {
+  width: 100%;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+.show-match {
+  background-color: #2c3e50;
+  height: 100%;
+  width: 100%;
+  min-height: 100vh;
+  min-width: 100px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  min-height: 90%;
+  width: 80%;
+  background-color: aquamarine;
+  display: flex;
+  justify-content: center;
+}
+
+.scoreboard-container {
+  width: 90%;
+  background-color: antiquewhite;
+  display: flex;
+  flex-direction: row;
+}
+
+.blue-side-container, .red-side-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.blue-side-container {
+  background-color: steelblue;
+}
+
+.red-side-container {
+  background-color: tomato;
+}
+
+.select-button {
+  width: 90%;
+  height: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.objectives {
+  height: 15%;
+  background-color: cadetblue;
+  width: 90%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.scoreboard {
+  height: 80%;
+  width: 90%;
+  background-color: cadetblue;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

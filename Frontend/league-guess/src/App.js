@@ -10,7 +10,7 @@ import ShowMatch from './components/ShowMatch';
 const App = () => {
   return (
     <Router>
-      <div>
+      <div style={{height: '100%'}}>
         <Routes>
           <Route exact path='/' element={<ShowBookList />} />
           <Route exact path='/matches' element={<ShowMatch />} />
