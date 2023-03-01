@@ -130,7 +130,13 @@ const sendData = function(req, res) {
     res.send(dataList);
 }
 
-matchRouter.get('/', [getPuuid, getMatchIds, getStats ]);
-matchRouter.get('/seed', [getPuuid, getTenMatchIds, getTenStats, sendData]);
+matchRouter.post('/', [getPuuid, getMatchIds, getStats ]);
+matchRouter.post('/seed', [getPuuid, getTenMatchIds, getTenStats, sendData]);
+
+matchRouter.get('/', (req,res) => {
+    Match.find()
+        .then(matches => res.json(matches))
+        .catch(err => res.status(404).json({ noMatchesFound: 'No Matches Found'}));
+})
 
 module.exports = matchRouter;

@@ -7,20 +7,21 @@ function ShowMatch() {
   const [match, setMatch] = useState([]);
 
   useEffect(() => {
-    // axios
-    //   .get('http://localhost:8082/api/matches')
-    //   .then((res) => {
-    //     console.log('Result: \n', res);
-    //     setMatch(res.data.id);
-    //   })
-    //   .catch((err) => {
-    //     console.log('Error from ShowMatch');
-    //   });
+    axios
+      .get('http://localhost:8082/api/matches')
+      .then((res) => {
+        console.log('Result: \n', res.data);
+        setMatch(res.data);
+        console.log('what is this?', match);
+      })
+      .catch((err) => {
+        console.log('Error from ShowMatch');
+      });
   }, []);
 
   function getMatchData() {
     axios
-    .get('http://localhost:8082/api/matches')
+    .post('http://localhost:8082/api/matches')
     .then((res) => {
       console.log('Result: \n', res);
       setMatch(res.data.id);
@@ -43,12 +44,8 @@ function ShowMatch() {
   }
 
   return (
-    <div className='ShowBookList'>
-      <div className='container'>
-        <button onClick={getMatchData}>Get Match Data</button>
-        <button onClick={seedMatchData}>Seed Data</button>
-        {match}
-      </div>
+    <div>
+      <p>Here is Match Data: {JSON.stringify(match)}</p>
     </div>
   );
 }
