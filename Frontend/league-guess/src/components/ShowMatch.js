@@ -21,10 +21,14 @@ function ShowMatch() {
       });
   }, []);
 
-  useEffect(() => {
-    console.log('this is current match now', currentMatch)
-    // TestFunc();
-  }, [currentMatch]);
+  // useEffect(() => {
+  //   console.log('this is current match now', currentMatch)
+  //   const props = {
+  //     stuff: currentMatch,
+  //     team: 100
+  //   }
+  //   TestFunc(props);
+  // }, [currentMatch]);
 
   function getMatchData() {
     axios
@@ -77,21 +81,26 @@ function App() {
 
   return (
     <div className='show-match'>
+      <h1 className='title'>Who Won?</h1>
       <div className="content">
       {/* <p>Here is Match Data: {JSON.stringify(match)}</p> */}
         <div className="scoreboard-container">
           <div className="blue-side-container">
             <button className="select-button" onClick={showData}>Blue Side</button>
-            <div className="objectives">Objectives</div>
+            <div className="objectives">
+              <ObjectivesFunc match={currentMatch} team={0}/>
+            </div>
             <div className="scoreboard">
-              <TestFunc stuff={currentMatch} team={currentMatch.players[0].team_id}/>
+              <TestFunc stuff={currentMatch} team={100}/>
             </div>
           </div>
           <div className="red-side-container">
-          <button className="select-button" onClick={showData}>Red Side</button>
-            <div className="objectives">Objectives</div>
+            <button className="select-button" onClick={showData}>Red Side</button>
+            <div className="objectives">
+              <ObjectivesFunc match={currentMatch} team={1}/>
+            </div>
             <div className="scoreboard">
-              <TestFunc stuff={currentMatch} team={currentMatch.players[5].team_id}/>
+              <TestFunc stuff={currentMatch} team={200}/>
             </div>
           </div>
         </div>
@@ -103,32 +112,35 @@ function App() {
 export default ShowMatch;
 
 export function TestFunc(props) {
-    console.log('This func has been called', props);
-    const currentMatch = props.stuff;
-    const champs = currentMatch?.players;
-
-    const BluePlayers = champs?.filter(champ => champ.team_id === props.team).map(champ => 
-        <div key={champ.champion} className="player">
-          <img className="champ-icon" src={`https://ddragon.leagueoflegends.com/cdn/13.4.1/img/champion/${champ.champion}.png`}></img>
-          <div className="player-stats">
-            <div className="player-items">
-              <ItemsFunc champ={champ} />
-            </div>
-            <div className="player-info">
-              <p className="player-level">Level: {champ.level}</p>
-              <p className="player-damage">Damage: {champ.damage}</p>
-              <p className="player-kda">KDA: {champ.kills}/{champ.deaths}/{champ.assists}</p>
+    if(props.stuff) {
+      const currentMatch = props.stuff;
+      const champs = currentMatch?.players;
+  
+      const BluePlayers = champs?.filter(champ => champ.team_id === props.team).map(champ => 
+          <div key={champ.champion} className={props.team == 100 ? 'player-blue' : 'player-red'}>
+            <img className="champ-icon" src={`https://ddragon.leagueoflegends.com/cdn/13.4.1/img/champion/${champ.champion}.png`}></img>
+            <div className="player-stats">
+              <div className={props.team == 100 ? 'player-items-blue' : 'player-items-red'}>
+                <ItemsFunc champ={champ} />
+              </div>
+              <div className="player-info">
+                <p className="player-level">Level: {champ.level}</p>
+                <p className="player-damage">Damage: {champ.damage}</p>
+                <p className="player-kda">KDA: {champ.kills}/{champ.deaths}/{champ.assists}</p>
+              </div>
             </div>
           </div>
-        </div>
-        // <div>Testing!</div>
-    )
-
-    console.log('Blue Players: ', BluePlayers);
-
-    return(
-      BluePlayers
-    );
+          // <div>Testing!</div>
+      )
+  
+      console.log('Blue Players: ', BluePlayers);
+  
+      return(
+        BluePlayers
+      );
+    }
+    console.log('This func has been called', props);
+    return <div>Hello World</div>
 }
 
 export function ItemsFunc(props) {
@@ -139,4 +151,21 @@ export function ItemsFunc(props) {
   return (
     itemsComp
   )
+}
+
+export function ObjectivesFunc(props) {
+  if(props.match.teams){
+    console.log(props.match);
+    const objectives = props.match.teams[props.team].objectives;
+    return (
+      <div className="objectives-container">
+        <p>Barons: {objectives.baron}</p>
+        <p>Dragons: {objectives.dragon}</p>
+        <p>Heralds: {objectives.riftHerald}</p>
+        {/* <p>Structues: {objectives.tower}</p> Too Much Info*/}
+        <p>Kills: {objectives.champion}</p>
+      </div>
+    )
+  }
+  return <div>Goodbye World</div>
 }
