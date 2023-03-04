@@ -172,3 +172,30 @@ body, html {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+.player {
+  height: 20%;
+  width: 100%;
+  background-color: chocolate;
+  display: flex;
+  /* align-items: center; */
+}
+
+.player-stats {
+  height: 100%;
+  width: 100%;
+  background-color: goldenrod;
+  display: flex;
+  flex-direction: column;
+}
+
+.player-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.champ-icon  {
+  height: 100%;
+  width: 18%;
+}

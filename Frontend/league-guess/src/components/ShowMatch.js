@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 function ShowMatch() {
   const [match, setMatch] = useState();
-  const [currentMatch, setCurrentMatch]  = useState();
+  const [currentMatch, setCurrentMatch]  = useState({});
 
   useEffect(() => {
     axios
@@ -20,6 +20,11 @@ function ShowMatch() {
         console.log('Error from ShowMatch');
       });
   }, []);
+
+  useEffect(() => {
+    console.log('this is current match now', currentMatch)
+    // TestFunc();
+  }, [currentMatch]);
 
   function getMatchData() {
     axios
@@ -50,6 +55,26 @@ function ShowMatch() {
     console.log('current', currentMatch);
   }
 
+  // do champion stuff here
+  // console.log(test);
+
+  // also look at:
+  /**
+   * function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+
+function App() {
+  return (
+    <div>
+      <Welcome name="Sara" />
+      <Welcome name="Cahal" />
+      <Welcome name="Edite" />
+    </div>
+  );
+}
+   */
+
   return (
     <div className='show-match'>
       <div className="content">
@@ -59,20 +84,15 @@ function ShowMatch() {
             <button className="select-button" onClick={showData}>Blue Side</button>
             <div className="objectives">Objectives</div>
             <div className="scoreboard">
-              <div className="player">
-                <img className="champ-icon" src={`https://ddragon.leagueoflegends.com/cdn/13.4.1/img/champion/${currentMatch.players[0].champion}.png`}></img>
-                <div className="player-stats">
-                  <div className="player-items">
-                    <img className="item-icon"></img>
-                  </div>
-                  <div className="player-damage"></div>
-                  <p className="player-kda"></p>
-                </div>
-              </div>
+              <TestFunc stuff={currentMatch} team={currentMatch.players[0].team_id}/>
             </div>
           </div>
           <div className="red-side-container">
-            Red
+          <button className="select-button" onClick={showData}>Red Side</button>
+            <div className="objectives">Objectives</div>
+            <div className="scoreboard">
+              <TestFunc stuff={currentMatch} team={currentMatch.players[5].team_id}/>
+            </div>
           </div>
         </div>
       </div>
@@ -81,3 +101,42 @@ function ShowMatch() {
 }
 
 export default ShowMatch;
+
+export function TestFunc(props) {
+    console.log('This func has been called', props);
+    const currentMatch = props.stuff;
+    const champs = currentMatch?.players;
+
+    const BluePlayers = champs?.filter(champ => champ.team_id === props.team).map(champ => 
+        <div key={champ.champion} className="player">
+          <img className="champ-icon" src={`https://ddragon.leagueoflegends.com/cdn/13.4.1/img/champion/${champ.champion}.png`}></img>
+          <div className="player-stats">
+            <div className="player-items">
+              <ItemsFunc champ={champ} />
+            </div>
+            <div className="player-info">
+              <p className="player-level">Level: {champ.level}</p>
+              <p className="player-damage">Damage: {champ.damage}</p>
+              <p className="player-kda">KDA: {champ.kills}/{champ.deaths}/{champ.assists}</p>
+            </div>
+          </div>
+        </div>
+        // <div>Testing!</div>
+    )
+
+    console.log('Blue Players: ', BluePlayers);
+
+    return(
+      BluePlayers
+    );
+}
+
+export function ItemsFunc(props) {
+  const items = props.champ.items;
+  const itemsComp = items.filter(item => item != 0).map(item =>
+    <img key={item.toString()} className="item-icon" src={`https://ddragon.leagueoflegends.com/cdn/13.4.1/img/item/${item}.png`}></img>
+  )
+  return (
+    itemsComp
+  )
+}
