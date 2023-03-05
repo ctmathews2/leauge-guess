@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
 function ShowMatch() {
   const [match, setMatch] = useState();
@@ -20,15 +19,6 @@ function ShowMatch() {
         console.log('Error from ShowMatch');
       });
   }, []);
-
-  // useEffect(() => {
-  //   console.log('this is current match now', currentMatch)
-  //   const props = {
-  //     stuff: currentMatch,
-  //     team: 100
-  //   }
-  //   TestFunc(props);
-  // }, [currentMatch]);
 
   function getMatchData() {
     axios
@@ -59,35 +49,14 @@ function ShowMatch() {
     console.log('current', currentMatch);
   }
 
-  // do champion stuff here
-  // console.log(test);
-
-  // also look at:
-  /**
-   * function Welcome(props) {
-  return <h1>Hello, {props.name}</h1>;
-}
-
-function App() {
-  return (
-    <div>
-      <Welcome name="Sara" />
-      <Welcome name="Cahal" />
-      <Welcome name="Edite" />
-    </div>
-  );
-}
-   */
-
   return (
     <div className='show-match'>
       <h1 className='title'>Who Won?</h1>
       <div className="content">
-      {/* <p>Here is Match Data: {JSON.stringify(match)}</p> */}
         <div className="scoreboard-container">
           <div className="blue-side-container">
             <button className="select-button" onClick={showData}>Blue Side</button>
-            <div className="objectives">
+            <div className="objectives" >
               <ObjectivesFunc match={currentMatch} team={0}/>
             </div>
             <div className="scoreboard">
@@ -112,17 +81,28 @@ function App() {
 export default ShowMatch;
 
 export function TestFunc(props) {
+    // Can this have its own state?
+    const [hidden, setHidden] = useState([true,true,true,true,true]);
+    console.log('here', hidden)
+
+    function changeElement(index) {
+      let temp = [...hidden];
+      temp[index] = false;
+      setHidden(temp);
+    };
+
     if(props.stuff) {
       const currentMatch = props.stuff;
       const champs = currentMatch?.players;
-  
-      const BluePlayers = champs?.filter(champ => champ.team_id === props.team).map(champ => 
+      console.log(props);
+      const BluePlayers = champs?.filter(champ => champ.team_id === props.team).map((champ, index) => 
           <div key={champ.champion} className={props.team == 100 ? 'player-blue' : 'player-red'}>
             <img className="champ-icon" src={`https://ddragon.leagueoflegends.com/cdn/13.4.1/img/champion/${champ.champion}.png`}></img>
             <div className="player-stats">
-              <div className={props.team == 100 ? 'player-items-blue' : 'player-items-red'}>
+              {hidden[index] && <button className="reveal-button" onClick={()=>{changeElement(index)}}>Reveal Player Stats</button>}
+              {!hidden[index] && <div className={props.team == 100 ? 'player-items-blue' : 'player-items-red'}>
                 <ItemsFunc champ={champ} />
-              </div>
+              </div>}
               <div className="player-info">
                 <p className="player-level">Level: {champ.level}</p>
                 <p className="player-damage">Damage: {champ.damage}</p>

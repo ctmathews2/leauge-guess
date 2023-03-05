@@ -11,7 +11,7 @@ import StartScreen from './components/StartScreen';
 const App = () => {
   return (
     <Router>
-      <div style={{height: '100%', display: 'flex', "align-items": 'center'}}>
+      <div style={{height: '100%', display: 'flex', alignItems: 'center'}}>
         <Routes>
           {/* <Route exact path='/' element={<ShowBookList />} /> */}
           <Route exact path='/' element={<StartScreen />} />
