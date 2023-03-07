@@ -177,8 +177,12 @@ body, html {
 }
 
 .reveal-button {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  height: 80px;
+  margin: 10px;
+}
+
+.reveal-obj {
+  width: 100%;
 }
 
 .objectives {

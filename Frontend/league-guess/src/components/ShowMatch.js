@@ -5,6 +5,9 @@ import axios from 'axios';
 function ShowMatch() {
   const [match, setMatch] = useState();
   const [currentMatch, setCurrentMatch]  = useState({});
+  const [gold, setGold] = useState(10);
+  const [points, setPoints] = useState(0);
+  const [hideObjectives, setHideObjectives] = useState([true,true]);
 
   useEffect(() => {
     axios
@@ -49,15 +52,24 @@ function ShowMatch() {
     console.log('current', currentMatch);
   }
 
+  function toggleObjectives (index) {
+    let temp = [...hideObjectives];
+    temp[index] = false;
+    setHideObjectives(temp);
+    setGold(gold - 3);
+  }
+
   return (
     <div className='show-match'>
       <h1 className='title'>Who Won?</h1>
+      <h2>Gold: {gold}    Points: {points}</h2>
       <div className="content">
         <div className="scoreboard-container">
           <div className="blue-side-container">
             <button className="select-button" onClick={showData}>Blue Side</button>
             <div className="objectives" >
-              <ObjectivesFunc match={currentMatch} team={0}/>
+              {hideObjectives[0] && <button className="reveal-obj" onClick={()=>{toggleObjectives(0)}}>Reveal Objectives</button>}
+              {!hideObjectives[0] && <ObjectivesFunc match={currentMatch} team={0}/>}
             </div>
             <div className="scoreboard">
               <TestFunc stuff={currentMatch} team={100}/>
@@ -66,7 +78,8 @@ function ShowMatch() {
           <div className="red-side-container">
             <button className="select-button" onClick={showData}>Red Side</button>
             <div className="objectives">
-              <ObjectivesFunc match={currentMatch} team={1}/>
+              {hideObjectives[1] && <button className="reveal-obj" onClick={()=>{toggleObjectives(1)}}>Reveal Objectives</button>}
+              {!hideObjectives[1] && <ObjectivesFunc match={currentMatch} team={1}/>}
             </div>
             <div className="scoreboard">
               <TestFunc stuff={currentMatch} team={200}/>
@@ -103,11 +116,11 @@ export function TestFunc(props) {
               {!hidden[index] && <div className={props.team == 100 ? 'player-items-blue' : 'player-items-red'}>
                 <ItemsFunc champ={champ} />
               </div>}
-              <div className="player-info">
+              {!hidden[index] && <div className="player-info">
                 <p className="player-level">Level: {champ.level}</p>
                 <p className="player-damage">Damage: {champ.damage}</p>
                 <p className="player-kda">KDA: {champ.kills}/{champ.deaths}/{champ.assists}</p>
-              </div>
+              </div>}
             </div>
           </div>
           // <div>Testing!</div>
