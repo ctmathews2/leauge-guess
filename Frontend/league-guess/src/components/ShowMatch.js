@@ -4,10 +4,13 @@ import axios from 'axios';
 
 function ShowMatch() {
   const [match, setMatch] = useState();
+  const [matchIndex, setMatchIndex] = useState(1);
   const [currentMatch, setCurrentMatch]  = useState({});
-  const [gold, setGold] = useState(10);
+  const [gold, setGold] = useState(6);
   const [points, setPoints] = useState(0);
   const [hideObjectives, setHideObjectives] = useState([true,true]);
+  const [hidePlayerBlue, setHidePlayerBlue] = useState([true, true, true, true, true]);
+  const [hidePlayerRed, setHidePlayerRed] = useState([true, true, true, true, true]);
 
   useEffect(() => {
     axios
@@ -47,16 +50,31 @@ function ShowMatch() {
     })
   }
 
-  function showData() {
-    console.log('data set', match);
-    console.log('current', currentMatch);
+  function chooseWinner(index) {
+    // console.log('data set', match);
+    // console.log('current', currentMatch);
+    if(currentMatch.teams[index].win === true) {
+      console.log('Correct!');
+      setPoints(points + 500);
+      setMatchIndex(matchIndex + 1);
+      setCurrentMatch(match[matchIndex]);
+      console.log('new current', currentMatch, matchIndex);
+      setHidePlayerBlue([true, true, true, true, true]);
+      setHidePlayerRed([true, true, true, true, true]);
+      setHideObjectives([true, true]);
+      setGold(6);
+    } else {
+      console.log('Incorrect :(');
+    }
   }
 
   function toggleObjectives (index) {
-    let temp = [...hideObjectives];
-    temp[index] = false;
-    setHideObjectives(temp);
-    setGold(gold - 3);
+    if (gold >= 3) {
+      let temp = [...hideObjectives];
+      temp[index] = false;
+      setHideObjectives(temp);
+      setGold(gold - 3);
+    }
   }
 
   return (
@@ -66,23 +84,23 @@ function ShowMatch() {
       <div className="content">
         <div className="scoreboard-container">
           <div className="blue-side-container">
-            <button className="select-button" onClick={showData}>Blue Side</button>
+            <button className="select-button" onClick={() => {chooseWinner(0)}}>Blue Side</button>
             <div className="objectives" >
               {hideObjectives[0] && <button className="reveal-obj" onClick={()=>{toggleObjectives(0)}}>Reveal Objectives</button>}
               {!hideObjectives[0] && <ObjectivesFunc match={currentMatch} team={0}/>}
             </div>
             <div className="scoreboard">
-              <TestFunc stuff={currentMatch} team={100}/>
+              <TestFunc stuff={currentMatch} team={100} gold={[gold, setGold]} playerHide={[hidePlayerBlue, setHidePlayerBlue]}/>
             </div>
           </div>
           <div className="red-side-container">
-            <button className="select-button" onClick={showData}>Red Side</button>
+            <button className="select-button" onClick={() => {chooseWinner(1)}}>Red Side</button>
             <div className="objectives">
               {hideObjectives[1] && <button className="reveal-obj" onClick={()=>{toggleObjectives(1)}}>Reveal Objectives</button>}
               {!hideObjectives[1] && <ObjectivesFunc match={currentMatch} team={1}/>}
             </div>
             <div className="scoreboard">
-              <TestFunc stuff={currentMatch} team={200}/>
+              <TestFunc stuff={currentMatch} team={200} gold={[gold, setGold]} playerHide={[hidePlayerRed, setHidePlayerRed]}/>
             </div>
           </div>
         </div>
@@ -95,13 +113,20 @@ export default ShowMatch;
 
 export function TestFunc(props) {
     // Can this have its own state?
-    const [hidden, setHidden] = useState([true,true,true,true,true]);
-    console.log('here', hidden)
+    // const [hidden, setHidden] = useState([true,true,true,true,true]);
+    // console.log('here', hidden)
+
+    function hello() {
+      console.log('yoooo');
+    }
 
     function changeElement(index) {
-      let temp = [...hidden];
-      temp[index] = false;
-      setHidden(temp);
+      if(props.gold[0] >= 1) {
+        let temp = [...props.playerHide[0]];
+        temp[index] = false;
+        props.playerHide[1](temp);
+        props.gold[1](props.gold[0] - 1);
+      }
     };
 
     if(props.stuff) {
@@ -112,11 +137,11 @@ export function TestFunc(props) {
           <div key={champ.champion} className={props.team == 100 ? 'player-blue' : 'player-red'}>
             <img className="champ-icon" src={`https://ddragon.leagueoflegends.com/cdn/13.4.1/img/champion/${champ.champion}.png`}></img>
             <div className="player-stats">
-              {hidden[index] && <button className="reveal-button" onClick={()=>{changeElement(index)}}>Reveal Player Stats</button>}
-              {!hidden[index] && <div className={props.team == 100 ? 'player-items-blue' : 'player-items-red'}>
+              {props.playerHide[0][index] && <button className="reveal-button" onClick={()=>{changeElement(index)}}>Reveal Player Stats</button>}
+              {!props.playerHide[0][index] && <div className={props.team == 100 ? 'player-items-blue' : 'player-items-red'}>
                 <ItemsFunc champ={champ} />
               </div>}
-              {!hidden[index] && <div className="player-info">
+              {!props.playerHide[0][index] && <div className="player-info">
                 <p className="player-level">Level: {champ.level}</p>
                 <p className="player-damage">Damage: {champ.damage}</p>
                 <p className="player-kda">KDA: {champ.kills}/{champ.deaths}/{champ.assists}</p>
@@ -126,13 +151,13 @@ export function TestFunc(props) {
           // <div>Testing!</div>
       )
   
-      console.log('Blue Players: ', BluePlayers);
+      // console.log('Blue Players: ', BluePlayers);
   
       return(
         BluePlayers
       );
     }
-    console.log('This func has been called', props);
+    // console.log('This func has been called', props);
     return <div>Hello World</div>
 }
 
