@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 function ShowMatch() {
   const [match, setMatch] = useState();
@@ -11,6 +12,8 @@ function ShowMatch() {
   const [hideObjectives, setHideObjectives] = useState([true,true]);
   const [hidePlayerBlue, setHidePlayerBlue] = useState([true, true, true, true, true]);
   const [hidePlayerRed, setHidePlayerRed] = useState([true, true, true, true, true]);
+
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     axios
@@ -55,7 +58,7 @@ function ShowMatch() {
     // console.log('current', currentMatch);
     if(currentMatch.teams[index].win === true) {
       console.log('Correct!');
-      setPoints(points + 500);
+      setPoints(points + 500 + (100 * gold));
       setMatchIndex(matchIndex + 1);
       setCurrentMatch(match[matchIndex]);
       console.log('new current', currentMatch, matchIndex);
@@ -65,6 +68,7 @@ function ShowMatch() {
       setGold(6);
     } else {
       console.log('Incorrect :(');
+      navigate("/", { state: { points: points} });
     }
   }
 
@@ -84,9 +88,9 @@ function ShowMatch() {
       <div className="content">
         <div className="scoreboard-container">
           <div className="blue-side-container">
-            <button className="select-button" onClick={() => {chooseWinner(0)}}>Blue Side</button>
+            <button className="select-button" onClick={() => {chooseWinner(0)}}>Blue Side Won</button>
             <div className="objectives" >
-              {hideObjectives[0] && <button className="reveal-obj" onClick={()=>{toggleObjectives(0)}}>Reveal Objectives</button>}
+              {hideObjectives[0] && <button className="reveal-obj" onClick={()=>{toggleObjectives(0)}}>Reveal Objectives (3G)</button>}
               {!hideObjectives[0] && <ObjectivesFunc match={currentMatch} team={0}/>}
             </div>
             <div className="scoreboard">
@@ -94,9 +98,9 @@ function ShowMatch() {
             </div>
           </div>
           <div className="red-side-container">
-            <button className="select-button" onClick={() => {chooseWinner(1)}}>Red Side</button>
+            <button className="select-button" onClick={() => {chooseWinner(1)}}>Red Side Won</button>
             <div className="objectives">
-              {hideObjectives[1] && <button className="reveal-obj" onClick={()=>{toggleObjectives(1)}}>Reveal Objectives</button>}
+              {hideObjectives[1] && <button className="reveal-obj" onClick={()=>{toggleObjectives(1)}}>Reveal Objectives (3G)</button>}
               {!hideObjectives[1] && <ObjectivesFunc match={currentMatch} team={1}/>}
             </div>
             <div className="scoreboard">
@@ -137,7 +141,7 @@ export function TestFunc(props) {
           <div key={champ.champion} className={props.team == 100 ? 'player-blue' : 'player-red'}>
             <img className="champ-icon" src={`https://ddragon.leagueoflegends.com/cdn/13.4.1/img/champion/${champ.champion}.png`}></img>
             <div className="player-stats">
-              {props.playerHide[0][index] && <button className="reveal-button" onClick={()=>{changeElement(index)}}>Reveal Player Stats</button>}
+              {props.playerHide[0][index] && <button className="reveal-button" onClick={()=>{changeElement(index)}}>Reveal Player Stats (1G)</button>}
               {!props.playerHide[0][index] && <div className={props.team == 100 ? 'player-items-blue' : 'player-items-red'}>
                 <ItemsFunc champ={champ} />
               </div>}

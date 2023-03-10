@@ -174,15 +174,30 @@ body, html {
   height: 30px;
   margin-top: 10px;
   margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: #E8E2E2;
+  /* color: white; */
 }
 
 .reveal-button {
   height: 80px;
   margin: 10px;
+  border-radius: 10px;
+  /* background-color: #645CBB; */
+  background-color: #E8E2E2;
+  /* color: white */
+}
+
+.reveal-button:hover, .reveal-obj:hover, .select-button:hover {
+  background-color: #645CBB;
+  color:white
 }
 
 .reveal-obj {
   width: 100%;
+  border-radius: 10px;
+  background-color: #E8E2E2;
+  /* color: white */
 }
 
 .objectives {
