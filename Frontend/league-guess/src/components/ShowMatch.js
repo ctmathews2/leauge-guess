@@ -19,55 +19,26 @@ function ShowMatch() {
     axios
       .get('http://localhost:8082/api/matches')
       .then((res) => {
-        console.log('Result: \n', res.data);
         setMatch(res.data);
         setCurrentMatch(res.data[0]);
-        console.log('what is this?', match);
       })
       .catch((err) => {
-        console.log('Error from ShowMatch');
+        console.log('Error from ShowMatch', err);
       });
   }, []);
 
-  function getMatchData() {
-    axios
-    .post('http://localhost:8082/api/matches')
-    .then((res) => {
-      console.log('Result: \n', res);
-      setMatch(res.data.id);
-    })
-    .catch((err) => {
-      console.log('Error from getMatchData', err);
-    });
-  }
-
-  // function to call seed api
-  function seedMatchData() {
-    axios
-    .post('http://localhost:8082/api/matches/seed')
-    .then((res) => {
-      console.log('Seed Data:', res);
-    })
-    .catch((err) => {
-      console.log('Error from seedMatchData', err);
-    })
-  }
-
   function chooseWinner(index) {
-    // console.log('data set', match);
-    // console.log('current', currentMatch);
     if(currentMatch.teams[index].win === true) {
       console.log('Correct!');
       setPoints(points + 500 + (100 * gold));
       setMatchIndex(matchIndex + 1);
       setCurrentMatch(match[matchIndex]);
-      console.log('new current', currentMatch, matchIndex);
       setHidePlayerBlue([true, true, true, true, true]);
       setHidePlayerRed([true, true, true, true, true]);
       setHideObjectives([true, true]);
       setGold(6);
     } else {
-      console.log('Incorrect :(');
+      console.log('Incorrect');
       navigate("/", { state: { points: points} });
     }
   }
@@ -191,3 +162,15 @@ export function ObjectivesFunc(props) {
   }
   return <div>Goodbye World</div>
 }
+
+  // Legacy function to call seed api
+  // function seedMatchData() {
+  //   axios
+  //   .post('http://localhost:8082/api/matches/seed')
+  //   .then((res) => {
+  //     console.log('Seed Data:', res);
+  //   })
+  //   .catch((err) => {
+  //     console.log('Error from seedMatchData', err);
+  //   })
+  // }
